@@ -18,7 +18,7 @@ jobs:
       with:
         python-version: '3.10'
 
-    - name: Install Dependencies
+    - name: Install System & Build Dependencies
       run: |
         sudo dpkg --add-architecture i386
         sudo apt-get update
@@ -29,12 +29,7 @@ jobs:
         pip install --upgrade pip
         pip install cython==0.29.36 buildozer virtualenv
 
-    - name: Setup Android Debug Keystore
-      run: |
-        mkdir -p /home/runner/.android
-        keytool -genkey -v -keystore /home/runner/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" || true
-
-    - name: Clear conflicting Android Environment Variables
+    - name: Clear Conflicting Android Environment Variables
       run: |
         echo "ANDROID_NDK_HOME=" >> $GITHUB_ENV
         echo "ANDROID_NDK=" >> $GITHUB_ENV
