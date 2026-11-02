@@ -1,3 +1,6 @@
+# (str) Application requirements
+# (comma separated)
+requirements = python3,requests
 [app]
 title = Shellndrod
 package.name = shellndrod
