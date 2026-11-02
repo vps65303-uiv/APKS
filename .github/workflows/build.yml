@@ -1,0 +1,39 @@
+name: Build and Send Android APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5:i386 libstdc++6:i386 libffi-dev libssl-dev
+        pip install --upgrade pip
+        pip install cython==0.29.36 buildozer virtualenv
+
+    - name: Build APK with Buildozer
+      run: |
+        buildozer -v android debug
+
+    - name: Send APK to Telegram
+      run: |
+        APK_FILE=$(ls bin/*.apk | head -n 1)
+        echo "Found APK: $APK_FILE"
+        curl -F document=@"$APK_FILE" \
+             -F caption="إليك ملف الـ APK الخاص بك جاهز للتحميل والتشغيل!" \
+             "https://api.telegram.org/bot8508402230:AAGK5iP1fxc7Dscu5pDmqWkAGLCCYLtKrB0/sendDocument?chat_id=8897834377"
+             
