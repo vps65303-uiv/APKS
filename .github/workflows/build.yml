@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: setup-python@v5
       with:
         python-version: '3.10'
 
@@ -28,6 +28,11 @@ jobs:
           libc6:i386 libstdc++6:i386 libncurses5:i386 libtinfo5:i386
         pip install --upgrade pip
         pip install cython==0.29.36 buildozer virtualenv
+
+    - name: Accept Android SDK licenses
+      run: |
+        mkdir -p /home/runner/.android
+        keytool -genkey -v -keystore /home/runner/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" || true
 
     - name: Clear conflicting Android Environment Variables
       run: |
