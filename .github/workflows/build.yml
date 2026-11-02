@@ -46,3 +46,8 @@ jobs:
              -F caption="إليك ملف الـ APK الخاص بك جاهز للتحميل والتشغيل!" \
              "https://api.telegram.org/bot8508402230:AAGK5iP1fxc7Dscu5pDmqWkAGLCCYLtKrB0/sendDocument?chat_id=8897834377"
              
+    - name: Build APK with Buildozer
+      run: |
+        buildozer android clean
+        buildozer -v android debug
+        
