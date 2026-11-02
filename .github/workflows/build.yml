@@ -29,6 +29,11 @@ jobs:
         pip install --upgrade pip
         pip install cython==0.29.36 buildozer virtualenv
 
+    - name: Clear conflicting Android Environment Variables
+      run: |
+        echo "ANDROID_NDK_HOME=" >> $GITHUB_ENV
+        echo "ANDROID_NDK=" >> $GITHUB_ENV
+
     - name: Build APK with Buildozer
       run: |
         buildozer -v android debug
