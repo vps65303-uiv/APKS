@@ -29,10 +29,25 @@ jobs:
         pip install --upgrade pip
         pip install cython==0.29.36 buildozer virtualenv
 
-    - name: Accept Android SDK licenses
+    - name: Setup Android SDK and Accept Licenses
       run: |
         mkdir -p /home/runner/.android
         keytool -genkey -v -keystore /home/runner/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" || true
+        
+        # تحميل وتثبيت أداة sdkmanager وقبول الرخص تلقائياً لتجنب مشكلة التوقف
+        export ANDROID_HOME="/home/runner/.buildozer/android/platform/android-sdk"
+        mkdir -p $ANDROID_HOME/cmdline-tools
+        
+        # تثبيت الـ command-line tools وقبول الرخص لجميع الحزم لضمان توفر aidl
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
+        unzip -q cmdline-tools.zip -d $ANDROID_HOME/cmdline-tools
+        mkdir -p $ANDROID_HOME/cmdline-tools/latest
+        mv $ANDROID_HOME/cmdline-tools/bin $ANDROID_HOME/cmdline-tools/latest/
+        mv $ANDROID_HOME/cmdline-tools/lib $ANDROID_HOME/cmdline-tools/latest/
+        
+        # الموافقة على رخص SDK وتثبيت الأدوات المطلوبة مسبقاً
+        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME --licenses || true
+        $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_HOME "platform-tools" "platforms;android-33" "build-tools;33.0.0" || true
 
     - name: Clear conflicting Android Environment Variables
       run: |
