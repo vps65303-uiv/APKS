@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04   # <--- تم التثبيت هنا على إصدار مستقر ومجرب لـ Buildozer
 
     steps:
     - name: Checkout Code
@@ -24,8 +24,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends \
           git zip unzip openjdk-17-jdk autoconf libtool pkg-config \
-          zlib1g-dev libffi-dev libssl-dev \
-          libc6:i386 libstdc++6:i386 libncurses6:i386 libtinfo6:i386
+          zlib1g-dev libffi-dev libssl-dev build-essential ccache \
+          libc6:i386 libstdc++6:i386 libncurses5:i386 libtinfo5:i386
         pip install --upgrade pip
         pip install cython==0.29.36 buildozer virtualenv
 
